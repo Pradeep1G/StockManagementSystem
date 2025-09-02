@@ -1,58 +1,98 @@
 package com.ofss;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 @RestController
+@RequestMapping("/customer")
 public class CustomerController {
 
-	@Autowired
-	private CustomerService customerService;
+    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
-	@RequestMapping(value = "/customer", method = RequestMethod.POST)
-	public ResponseEntity<String> addNewCustomer(@RequestBody Customer c) {
-        boolean isAdded = customerService.addNewCustomer(c);
-        if (isAdded) {
-            return ResponseEntity.ok("Customer Added Successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("Failed to add customer");
+    @Autowired
+    private CustomerService customerService;
+
+    @PostMapping
+    public ResponseEntity<ApiResponse> addNewCustomer(@RequestBody Customer c) {
+        ApiResponse response = new ApiResponse();
+        try {
+            customerService.addNewCustomer(c);
+            response.setStatus("success");
+            response.setMessage("Customer Added Successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            logger.error("Failed to add customer", ex);
+            response.setStatus("error");
+            response.setMessage("Failed to add customer: " + ex.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-	@RequestMapping(value = "/customer/{email}", method = RequestMethod.GET)
-	public ResponseEntity<Customer> getCustomerDetails(@PathVariable("email") String email) {
-	    Customer c = customerService.getCustomerDetailsByEmail(email);
-	    if (c != null) {
-	        return ResponseEntity.ok(c);
-	    } else {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-	    }
-	}
+    @GetMapping("/{email}")
+    public ResponseEntity<ApiResponse> getCustomerDetails(@PathVariable("email") String email) {
+        ApiResponse response = new ApiResponse();
+        try {
+            Customer c = customerService.getCustomerDetailsByEmail(email);
+            if (c != null) {
+                response.setStatus("success");
+                response.setMessage("Customer found");
+                response.setData(c);
+                return ResponseEntity.ok(response);
+            } else {
+                response.setStatus("error");
+                response.setMessage("Customer not found");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception ex) {
+            logger.error("Fetch customer error", ex);
+            response.setStatus("error");
+            response.setMessage("Error fetching customer: " + ex.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@RequestMapping(value = "/customer/login", method = RequestMethod.POST)
-	public ResponseEntity<String> loginCustomer(@RequestBody Customer c) {
-	    boolean valid = customerService.validateLogin(c.getEmailId(), c.getPassword());
-	    if (valid) {
-	        return ResponseEntity.ok("Login successful!");
-	    } else {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-	    }
-	}
-	
-	@RequestMapping(value = "/customer/stocksDetails/{customerId}", method = RequestMethod.GET)
-	public ResponseEntity<List<CustomerStockDetail>> getCustomerStockDetails(@PathVariable("customerId") int customerId) {
-		System.out.println("I am in customer controller");
-		List<CustomerStockDetail> details = customerService.getCustomerStockDetails(customerId);
-        return ResponseEntity.ok(details);
-	}
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse> loginCustomer(@RequestBody Customer c) {
+        ApiResponse response = new ApiResponse();
+        try {
+            boolean valid = customerService.validateLogin(c.getEmailId(), c.getPassword());
+            if (valid) {
+                response.setStatus("success");
+                response.setMessage("Login successful!");
+                return ResponseEntity.ok(response);
+            } else {
+                response.setStatus("error");
+                response.setMessage("Invalid email or password.");
+                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception ex) {
+            logger.error("Login error", ex);
+            response.setStatus("error");
+            response.setMessage("Error logging in: " + ex.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @GetMapping("/stocksDetails/{customerId}")
+    public ResponseEntity<ApiResponse> getCustomerStockDetails(@PathVariable("customerId") int customerId) {
+        ApiResponse response = new ApiResponse();
+        try {
+            List<CustomerStockDetail> details = customerService.getCustomerStockDetails(customerId);
+            response.setStatus("success");
+            response.setMessage("Fetched customer stock details");
+            response.setData(details);
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            logger.error("Fetch customer stock details error", ex);
+            response.setStatus("error");
+            response.setMessage("Error fetching stock details: " + ex.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
