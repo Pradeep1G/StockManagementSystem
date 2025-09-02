@@ -70,6 +70,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.ofss</groupId>
+			<artifactId>StocksMSJDBC</artifactId>
+			<version>1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ofss</groupId>
+			<artifactId>TransactionMSJDBC</artifactId>
+			<version>1</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
