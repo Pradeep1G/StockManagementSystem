@@ -1,43 +1,47 @@
 package com.ofss;
-
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.List;
 
 @Service
 public class StocksService {
-	@Autowired
-	StocksDAO stockDAO;
-	
-	public void addStock(Stocks s) {
-		stockDAO.addAStock(s);
-		
-	}
 
+    private static final Logger logger = LoggerFactory.getLogger(StocksService.class);
 
-	public ArrayList<Stocks> getStocks() {
-		// TODO Auto-generated method stub
-		return stockDAO.getAllStocks();
-	}
-	
-	public Stocks getAStock(int sid) {
-		return stockDAO.getStockById(sid);
-	}
-	public ResponseEntity<Object> deleteAStockById(int sid) {
-		return stockDAO.deleteAStockById(sid);
-	}
+    @Autowired
+    private StocksDAO stockDAO;
 
+    public void addStock(Stocks s) throws Exception {
+        logger.info("Adding stock: {}", s.getStockId());
+        stockDAO.addAStock(s);
+    }
 
-	public ResponseEntity<Object> updateStockById(int sid, Stocks s) {
-		return stockDAO.updateStock(sid,s);
-	}
+    public List<Stocks> getStocks() throws Exception {
+        logger.debug("Fetching all stocks");
+        return stockDAO.getAllStocks();
+    }
 
+    public Stocks getAStock(long sid) throws Exception {
+        logger.debug("Fetching stock: {}", sid);
+        Stocks stock = stockDAO.getStockById(sid);
+        // If not found, DAO should throw or handle appropriately
+        return stock;
+    }
 
-	public ResponseEntity<Object> PatchStockById(int sid, Stocks s) {
-		// TODO Auto-generated method stub
-		return stockDAO.patchStock(sid,s);
-	}
+    public boolean deleteAStockById(long sid) throws Exception {
+        logger.info("Deleting stock: {}", sid);
+        return stockDAO.deleteAStockById(sid);
+    }
 
+    public boolean updateStockById(long sid, Stocks s) throws Exception {
+        logger.info("Updating stock: {}", sid);
+        return stockDAO.updateStock(sid, s);
+    }
+
+    public boolean patchStockById(long sid, Stocks s) throws Exception {
+        logger.info("Patching stock: {}", sid);
+        return stockDAO.patchStock(sid, s);
+    }
 }
