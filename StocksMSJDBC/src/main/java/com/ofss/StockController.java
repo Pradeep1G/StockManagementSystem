@@ -1,47 +1,146 @@
 package com.ofss;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List; // Prefer interface over implementation
 
 @RestController
+@RequestMapping("/stock")
 public class StockController {
-	@Autowired
-	StocksService ss;
-	@RequestMapping(value = "/stock", method = RequestMethod.POST)
-	public String addStock(@RequestBody Stocks s) {
-		ss.addStock(s);
-		return "Stock Added Successfully";
-	}
-	@RequestMapping(value = "/stock", method = RequestMethod.GET)
-	public ArrayList<Stocks> getStocks() {
-		System.out.println("Fetching all stocks...");
-		return ss.getStocks(); 
-	} 
-	@RequestMapping(value="/stock/{stockId}", method=RequestMethod.GET)
-	public Stocks getAStock(@PathVariable("stockId") int sid) {
-			return ss.getAStock(sid);
-	}
-	@RequestMapping(value="/stock/{stockId}", method=RequestMethod.DELETE)
-	public ResponseEntity<Object> deleteAStockById(@PathVariable("stockId") int sid) {
-		System.out.println("Deleting a stock by id called from the controller");
-		return ss.deleteAStockById(sid);
-	}
-	@RequestMapping(value="/stock/{stockId}", method=RequestMethod.PUT)
-	public ResponseEntity<Object> updateAStockById(@PathVariable("stockId") int sid,@RequestBody Stocks s) {
-		System.out.println("Updated a stock by id");
-		return ss.updateStockById(sid,s);
-	}
-	@RequestMapping(value="/stock/{stockId}", method=RequestMethod.PATCH)
-	public ResponseEntity<Object> PatchAStockById(@PathVariable("stockId") int sid,@RequestBody Stocks s) {
-		System.out.println("PAtched a stock by id");
-		return ss.PatchStockById(sid,s);
-	}
 
+    private static final Logger logger = LoggerFactory.getLogger(StockController.class);
+
+    @Autowired
+    private StocksService stocksService;
+
+    @PostMapping
+    public ResponseEntity<ApiResponse> addStock(@RequestBody Stocks stock) {
+        ApiResponse response = new ApiResponse();
+        try {
+            stocksService.addStock(stock);
+            logger.info("Added stock: {}", stock.getStockId());
+            response.setStatus("success");
+            response.setMessage("Stock Added Successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Failed to add stock", e);
+            response.setStatus("error");
+            response.setMessage("Failed to add stock: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse> getStocks() {
+        ApiResponse response = new ApiResponse();
+        try {
+            logger.debug("Fetching all stocks...");
+            List<Stocks> allStocks = stocksService.getStocks();
+            response.setStatus("success");
+            response.setMessage("Fetched all stocks");
+            response.setData(allStocks);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Error fetching stocks", e);
+            response.setStatus("error");
+            response.setMessage("Could not fetch stocks");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{stockId}")
+    public ResponseEntity<ApiResponse> getAStock(@PathVariable("stockId") long stockId) {
+        ApiResponse response = new ApiResponse();
+        try {
+            Stocks stock = stocksService.getAStock(stockId);
+            if (stock == null) {
+                response.setStatus("error");
+                response.setMessage("Stock not found");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            response.setStatus("success");
+            response.setMessage("Stock fetched successfully");
+            response.setData(stock);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Error fetching stock {}", stockId, e);
+            response.setStatus("error");
+            response.setMessage("Could not fetch stock: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/{stockId}")
+    public ResponseEntity<ApiResponse> deleteAStockById(@PathVariable("stockId") long stockId) {
+        ApiResponse response = new ApiResponse();
+        try {
+            boolean deleted = stocksService.deleteAStockById(stockId);
+            if (deleted) {
+                logger.info("Deleted stock {}", stockId);
+                response.setStatus("success");
+                response.setMessage("Stock deleted successfully");
+            } else {
+                response.setStatus("error");
+                response.setMessage("Stock not found to delete");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Error deleting stock {}", stockId, e);
+            response.setStatus("error");
+            response.setMessage("Could not delete stock: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{stockId}")
+    public ResponseEntity<ApiResponse> updateAStockById(@PathVariable("stockId") long stockId, @RequestBody Stocks stock) {
+        ApiResponse response = new ApiResponse();
+        try {
+            boolean updated = stocksService.updateStockById(stockId, stock);
+            if (updated) {
+                logger.info("Updated stock {}", stockId);
+                response.setStatus("success");
+                response.setMessage("Stock updated successfully");
+            } else {
+                response.setStatus("error");
+                response.setMessage("Stock not found to update");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Error updating stock {}", stockId, e);
+            response.setStatus("error");
+            response.setMessage("Could not update stock: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PatchMapping("/{stockId}")
+    public ResponseEntity<ApiResponse> patchAStockById(@PathVariable("stockId") long stockId, @RequestBody Stocks stock) {
+        ApiResponse response = new ApiResponse();
+        try {
+            boolean patched = stocksService.patchStockById(stockId, stock);
+            if (patched) {
+                logger.info("Patched stock {}", stockId);
+                response.setStatus("success");
+                response.setMessage("Stock patched successfully");
+            } else {
+                response.setStatus("error");
+                response.setMessage("Stock not found to patch");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Error patching stock {}", stockId, e);
+            response.setStatus("error");
+            response.setMessage("Could not patch stock: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
