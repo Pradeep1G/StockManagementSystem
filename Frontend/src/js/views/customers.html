@@ -1,0 +1,27 @@
+
+<div class="oj-hybrid-padding">
+  <h1>Customers Details</h1>
+  
+  <table border="1">
+        <thead>
+            <tr>
+                <th>customerId</th>
+                <th>firstName</th>
+                <th>lastName</th>
+                <th>phoneNumber</th>
+                <th>emailId</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: customers">
+            <tr>
+                <td><span data-bind="text: customerId"></span></td>
+                <td><span data-bind="text: firstName"></span></td>
+                <td><span data-bind="text: lastName"></span></td>
+                <td><span data-bind="text: phoneNumber"></span></td>
+                <td><span data-bind="text: emailId"></span></td>
+
+            </tr>
+        </tbody>
+    </table>
+
+</div>

@@ -1,0 +1,184 @@
+<script type="text/html" id="buyCellTemplate">
+  <div data-bind="with: $context.row">
+    <button
+      data-bind="visible: !buyMode(), click: function() { enableBuyMode($data) }"
+    >
+      Buy
+    </button>
+    <span data-bind="visible: buyMode()" style="display:inline; width: 100%;">
+      <input
+        type="number"
+        min="1"
+        data-bind="value: buyVolume,
+attr: { max: stockVolume },
+event: { input: validateBuyVolume }"
+        style="width: 30px;"
+      />
+      <button
+        data-bind="click: function() { buyStock($data) }, enable: inputValid()"
+      >
+        Confirm
+      </button>
+      <button data-bind="click: function() { disableBuyMode($data) }">
+        Cancel
+      </button>
+      <span
+        data-bind="visible: !inputValid()"
+        style="color:red; font-size:smaller;"
+      >
+        Volume 1 to <span data-bind="text: stockVolume"></span>
+      </span>
+    </span>
+  </div>
+</script>
+
+<script type="text/html" id="deleteCellTemplate">
+  <div data-bind="with: $context.row">
+    <button 
+      data-bind="click: function() { deleteStock($data) }">
+      <!-- Optionally disable if deletingStockId matches -->
+      Delete
+    </button>
+  </div>
+</script>
+
+<div class="oj-hybrid-padding">
+
+    <div
+  class="oj-sm-padding-8x oj-flex oj-sm-justify-content-center oj-sm-align-items-center oj-sm-spacing-24"
+  style="min-height: 60vh; gap: 32px;"
+  data-bind="visible: admin()"
+>
+  <div
+    class="oj-sm-12 oj-md-6 oj-lg-4 oj-panel oj-panel-shadow-sm oj-panel-alt1"
+  >
+    <h2 class="oj-typography-heading-sm oj-sm-margin-0">
+      Add New Stock
+    </h2>
+
+    <div class="oj-form-layout" style="margin-top:2rem;" max-columns="1" label-edge="inside">
+      <oj-input-text
+        value="{{newStockId}}"
+        label-hint="Stock ID"
+        required="true"
+        autocomplete="off"
+        placeholder="Stock ID">
+      </oj-input-text>
+      <oj-input-text
+        value="{{newStockName}}"
+        label-hint="Stock Name"
+        required="true"
+        autocomplete="off"
+        placeholder="Stock Name">
+      </oj-input-text>
+      <oj-input-text
+        value="{{newStockPrice}}"
+        label-hint="Price"
+        required="true"
+        autocomplete="off"
+        placeholder="Price"
+        type="number">
+      </oj-input-text>
+      <oj-input-text
+        value="{{newStockVolume}}"
+        label-hint="Listed Volume"
+        required="true"
+        autocomplete="off"
+        placeholder="Listed Volume"
+        type="number">
+      </oj-input-text>
+      <oj-input-text
+        value="{{newStockExchange}}"
+        label-hint="Listed Exchange"
+        required="true"
+        autocomplete="off"
+        placeholder="Listed Exchange">
+      </oj-input-text>
+    </div>
+
+    <div class="oj-sm-margin-top-4x">
+      <oj-button
+        chroming="callToAction"
+        on-oj-action="[[addStock]]"
+        style="width:100%;"
+      >
+        Add Stock
+      </oj-button>
+      <p style="color: red; margin-top: 8px;" data-bind="text: addError"></p>
+    </div>
+
+  </div>
+
+
+  <div
+    class="oj-sm-12 oj-md-6 oj-lg-4 oj-panel oj-panel-shadow-sm oj-panel-alt1"
+  >
+    <h2 class="oj-typography-heading-sm oj-sm-margin-0">
+      Edit Stock
+    </h2>
+    <div class="oj-form-layout" style="margin-top:2rem; display: flex; flex-direction: column; gap: 16px;" max-columns="1" label-edge="inside">
+      <oj-input-text
+        value="{{editStockId}}"
+        label-hint="Stock ID"
+        autocomplete="off"
+        placeholder="Stock ID">
+      </oj-input-text>
+      <oj-input-text
+        value="{{editStockListedVolume}}"
+        label-hint="Listed Volume"
+        autocomplete="off"
+        placeholder="Listed Volume">
+      </oj-input-text>
+      <oj-input-text
+        value="{{editStockName}}"
+        label-hint="Stock Name"
+        autocomplete="off"
+        placeholder="(Optional) Stock Name">
+      </oj-input-text>
+      <oj-input-text
+        value="{{editStockPrice}}"
+        label-hint="Price"
+        autocomplete="off"
+        placeholder="(Optional) Price"
+        type="number">
+      </oj-input-text>
+      <oj-input-text
+        value="{{editStockExchange}}"
+        label-hint="Listed Exchange"
+        autocomplete="off"
+        placeholder="(Optional) Listed Exchange">
+      </oj-input-text>
+    </div>
+    <div class="oj-sm-margin-top-4x oj-flex oj-sm-justify-content-space-between">
+      <oj-button
+        chroming="callToAction"
+        on-oj-action="[[saveEditStock]]"
+        style="flex: 1 1 0;"
+      >
+        Save Changes
+      </oj-button>
+      <span style="width:8px"></span>
+    </div>
+    <p style="color: red; margin-top: 8px;" data-bind="text: editError"></p>
+  </div>
+
+
+</div>
+
+
+
+  <h1>Trending Stocks</h1>
+
+
+  <oj-table
+    id="stockTable"
+    data="[[stockDataSource]]"
+    columns="[[columns]]"
+    display="grid"
+    selection-mode.row="single"
+    style="width: 100%; margin-top: 24px"
+  >
+  </oj-table>
+</div>
+<p>Should do net profit</p>
+<p>should create a column - current profit/loss status</p>

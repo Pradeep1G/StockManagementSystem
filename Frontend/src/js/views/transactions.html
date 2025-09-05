@@ -1,0 +1,17 @@
+<div class="oj-hybrid-padding">
+  <h1>Your Transactions History</h1>
+
+  <oj-table
+    id="transactionTable"
+    data="[[transactionDataSource]]"
+    display="grid"
+    selection-mode.row="single"
+    columns='[
+      {"headerText": "Stock Id", "field": "stockId"},
+      {"headerText": "Transaction Type", "field": "transactionType"},
+      {"headerText": "Transaction Price", "field": "transactionPrice"},
+      {"headerText": "Volume", "field": "volume"},
+      {"headerText": "Transaction Time", "field": "transactionTime"}
+    ]'
+    style="width:100%; margin-top:24px;">
+  </oj-table>

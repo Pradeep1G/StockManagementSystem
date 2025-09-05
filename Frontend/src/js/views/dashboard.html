@@ -1,0 +1,50 @@
+
+<script type="text/html" id="sellCellTemplate">
+  <div data-bind="with: $context.row">
+    <button
+      data-bind="visible: !sellMode(), click: function() { enableSellMode($data) }"
+    >
+      Sell
+    </button>
+    <span data-bind="visible: sellMode()" style="display:inline; width: 100%;">
+      <input
+        type="number"
+        min="1"
+        data-bind="value: sellVolume,
+attr: { max: currentVolume },
+event: { input: validateSellVolume }"
+        style="width: 30px;"
+      />
+      <button
+        data-bind="click: function() { sellStock($data) }, enable: inputValid()"
+      >
+        Confirm
+      </button>
+      <button data-bind="click: function() { disableSellMode($data) }">
+        Cancel
+      </button>
+      <span
+        data-bind="visible: !inputValid()"
+        style="color:red; font-size:smaller;"
+      >
+        Volume 1 to <span data-bind="text: currentVolume"></span>
+      </span>
+    </span>
+  </div>
+</script>
+
+<div class="oj-hybrid-padding">
+  <h1>My Stocks</h1>
+  <oj-table
+    id="stockTable"
+    data="[[stockDataSource]]"
+    columns="[[columns]]"
+    display="grid"
+    selection-mode.row="single"
+    style="width: 100%; margin-top: 24px"
+  >
+  </oj-table>
+</div>
+<p>Should do net profit</p>
+<p>should create a column - current profit/loss status</p>
+<p>update the net stockk volume in stocks table after every transaction</p>

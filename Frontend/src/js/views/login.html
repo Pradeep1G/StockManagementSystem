@@ -1,0 +1,124 @@
+<div
+  class="oj-sm-padding-8x oj-flex oj-sm-justify-content-center oj-sm-align-items-center"
+  style="min-height: 60vh"
+>
+  <div
+    class="oj-sm-12 oj-md-6 oj-lg-4 oj-panel oj-panel-shadow-sm oj-panel-alt1"
+  >
+    <h2
+      data-bind="visible: isLogin()"
+      class="oj-typography-heading-sm oj-sm-margin-0"
+    >
+      Log in
+    </h2>
+    <h2
+      data-bind="visible: !isLogin()"
+      class="oj-typography-heading-sm oj-sm-margin-0"
+    >
+      Sign in
+    </h2>
+
+    <div data-bind="visible: isLogin()">
+      <oj-messages messages="[[messages]]"></oj-messages>
+
+      <oj-input-text
+        value="{{email}}"
+        required="true"
+        autocomplete="email"
+        placeholder="Email address"
+        label-hint="Email"
+      ></oj-input-text>
+      <oj-input-text
+        value="{{password}}"
+        required="true"
+        autocomplete="current-password"
+        placeholder="Password"
+        label-hint="Password"
+      ></oj-input-text>
+
+      <oj-input-text
+        value="{{userType}}"
+        required="true"
+        autocomplete="userType"
+        placeholder="customer"
+        label-hint="User Type"
+      ></oj-input-text>
+    </div>
+
+    <div data-bind="visible: !isLogin()">
+
+        <oj-messages messages="[[messages]]"></oj-messages>
+
+        <oj-input-text
+        value="{{firstName}}"
+        required="true"
+        autocomplete="firstName"
+        placeholder="First Name"
+        label-hint="First Name"
+      ></oj-input-text>
+
+      <oj-input-text
+        value="{{lastName}}"
+        required="true"
+        autocomplete="lastName"
+        placeholder="Last Name"
+        label-hint="Last Name"
+      ></oj-input-text>
+
+      <oj-input-text
+        value="{{phoneNumber}}"
+        required="true"
+        autocomplete="phoneNumber"
+        placeholder="Phone Number"
+        label-hint="Phone Number"
+      ></oj-input-text>
+        
+      <oj-input-text
+        value="{{emailId}}"
+        required="true"
+        autocomplete="email"
+        placeholder="Email address"
+        label-hint="Email"
+      ></oj-input-text>
+      <oj-input-text
+        value="{{passwords}}"
+        required="true"
+        autocomplete="current-password"
+        placeholder="Password"
+        label-hint="Password"
+      ></oj-input-text>
+
+    </div>
+
+
+
+    <div class="oj-sm-margin-top-4x" >
+      <oj-button style="display: flex; justify-content: flex-end; margin-top: 8px;"
+        on-oj-action="[[submit]]"
+        chroming="callToAction"
+        disabled="[[submitting()]]"
+      >
+
+            <span
+          data-bind="visible: isLogin(), text: submitting() ? 'Logging in...' : 'Log in'"
+        ></span>
+
+        <span
+          data-bind="visible: !isLogin(), text: submitting() ? 'Signing in...' : 'Sign in'"
+        ></span>
+      </oj-button>
+      <p
+        data-bind="click: toggleLogin, visible: isLogin()"
+        style="color: gray; text-decoration: underline; cursor: pointer"
+      >
+        Crete an account
+      </p>
+      <p
+        data-bind="click: toggleLogin, visible: !isLogin()"
+        style="color: gray; text-decoration: underline; cursor: pointer"
+      >
+        Already have an Account? Login!
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+
+<div class="oj-hybrid-padding">
+  <div>
+<div class="content-container">
+  <h2>Stock Manager Overview</h2>
+  <p>
+    Stock Manager is a robust Java-based application developed to efficiently manage stock inventories and customer data within a simplified interface.
+    The system provides core functionalities such as adding, updating, and removing stocks, handling customer information, and facilitating stock transactions including purchases and sales.
+    Designed with maintainability and scalability in mind, Stock Manager leverages Oracle database integration for persistent data storage, ensuring data integrity across sessions.
+  </p>
+
+  <h3>Key Features</h3>
+  <ol>
+    <li>
+      <strong>Stock Management</strong>
+      <ul>
+        <li><b>Add New Stock:</b> Users can add new stocks by specifying key details such as the stock name, symbol, price, and quantity.</li>
+        <li><b>Remove Stock:</b> Enables the deletion of stock entries based on their unique symbol.</li>
+        <li><b>Update Stock:</b> Allows modification of existing stock records, including changes to stock price and available quantity.</li>
+        <li><b>Retrieve Stock:</b> Retrieves existing stock records.</li>
+      </ul>
+    </li>
+    <li>
+      <strong>Customer Management</strong>
+      <ul>
+        <li><b>Retrieve Customer:</b> Retrieves existing customer records.</li>
+      </ul>
+    </li>
+    <li>
+      <strong>Stock Transactions</strong>
+      <ul>
+        <li><b>Purchase Stocks:</b> Customers can buy stocks from the system. The purchase updates the stock quantity in the inventory and logs the transaction in the customer’s history.</li>
+        <li><b>Sell Stocks:</b> Allows customers to sell previously purchased stocks. The transaction adjusts the stock quantity accordingly and records the sale in the customer's history.</li>
+      </ul>
+    </li>
+    <li>
+      <strong>Data Persistence</strong>
+      <ul>
+        <li>
+          <b>Database Integration:</b>
+          The application employs Oracle database tables for persistent storage of stock and customer information.
+        </li>
+      </ul>
+    </li>
+  </ol>
+
+
+  <h3>Optional Reports</h3>
+  <ol>
+    <li>List of customers, stocks details and their total assets including the txn type</li>
+    <li>List the customer whose asset value is the maximum</li>
+    <li>List the customer whose asset value is the minimum</li>
+    <li>List the stock name which has been transacted more number of times</li>
+    <li>List the stock name which has been transacted less number of times</li>
+    <li>List the stock name whose price is the highest</li>
+    <li>List all the stock details</li>
+    <li>List all the customer details</li>
+    <li>List all the txn details</li>
+    <li>List which txn is more (sell or buy)</li>
+    <li>Display total assests of all customers</li>
+  </ol>
+</div>
+</div>
