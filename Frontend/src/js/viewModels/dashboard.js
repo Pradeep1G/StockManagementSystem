@@ -10,6 +10,7 @@ define([
     var self = this;
     self.statusMessage = ko.observable("Loading...");
     self.stockDataSource = ko.observable();
+    self.netProfit = ko.observable(0);
 
     self.router = params && params.router;
     if(localStorage.getItem("user")==null){self.router.go({path: 'login'})}
@@ -20,6 +21,7 @@ define([
       { headerText: "Net Invested", field: "netInvested" },
       { headerText: "Current Price", field: "currentPrice" },
       { headerText: "Current Value", field: "currentValue" },
+      { headerText: "Status", field: "status" },
       {
         headerText: 'Sell',
          width: '250px',
@@ -35,6 +37,7 @@ define([
         stock.sellMode = ko.observable(false);
         stock.sellVolume = ko.observable(1);
         stock.inputValid = ko.observable(true);
+        stock.status = stock.netInvested > stock.currentVolume*stock.currentPrice ? "LOSS" : "PROFIT";
         stock.enableSellMode = function (row) {
           row.sellMode(true);
         };
@@ -102,6 +105,7 @@ define([
           if (json.status !== "success")
             throw new Error(json.message || "Failed to fetch customer");
           let customerId = json.data.customerId;
+          self.netProfit(json.data.profit);
           self.currentCustomerId = customerId; // Store for sell
           let stocksApiUrl = `http://gvpradee-fv9rjb4:8085/customer/stocksDetails/${customerId}`;
           return fetch(stocksApiUrl);
