@@ -28,8 +28,8 @@ public class CustomerDAO extends JdbcDaoSupport {
         String getIdSQL = "SELECT customer_seq.NEXTVAL FROM dual";
         Long customerId = getJdbcTemplate().queryForObject(getIdSQL, Long.class);
 
-        String insertCustomer = "INSERT INTO customers (customer_id, first_name, last_name, phone_number, email) VALUES (?,?,?,?,?)";
-        getJdbcTemplate().update(insertCustomer, customerId, c.getFirstName(), c.getLastName(), c.getPhoneNumber(), c.getEmailId());
+        String insertCustomer = "INSERT INTO customers (customer_id, first_name, last_name, phone_number, email, profit) VALUES (?,?,?,?,?,?)";
+        getJdbcTemplate().update(insertCustomer, customerId, c.getFirstName(), c.getLastName(), c.getPhoneNumber(), c.getEmailId(), c.getProfit());
 
         String insertCredentials = "INSERT INTO credentials (customer_id, email, password) VALUES (?,?,?)";
         getJdbcTemplate().update(insertCredentials, customerId, c.getEmailId(), c.getPassword());
@@ -38,7 +38,7 @@ public class CustomerDAO extends JdbcDaoSupport {
     }
 
     public Customer getCustomerDetailsByEmail(String email) {
-        String sql = "SELECT customer_id, first_name, last_name, phone_number, email FROM customers WHERE email = ?";
+        String sql = "SELECT customer_id, first_name, last_name, phone_number, email, profit FROM customers WHERE email = ?";
         List<Customer> results = getJdbcTemplate().query(sql, (rs, rowNum) -> {
             Customer c = new Customer();
             c.setCustomerId(rs.getInt("customer_id"));
@@ -46,6 +46,7 @@ public class CustomerDAO extends JdbcDaoSupport {
             c.setLastName(rs.getString("last_name"));
             c.setPhoneNumber(rs.getLong("phone_number"));
             c.setEmailId(rs.getString("email"));
+            c.setProfit(rs.getLong("profit"));
             return c;
         }, email);
 
@@ -72,4 +73,17 @@ public class CustomerDAO extends JdbcDaoSupport {
             return t;
         }, customerId);
     }
+    
+    public List<Transaction> getAllTransactions(int customerId) {
+		String sql = "SELECT * FROM transactions WHERE CUSTOMER_ID="+customerId;
+	        return getJdbcTemplate().query(sql, (rs, rowNum) -> {
+	        	Transaction t = new Transaction();
+	        	t.setStockId(rs.getLong("stock_id"));
+	            t.setTransactionType(rs.getString("transaction_type"));
+	            t.setTransactionPrice(rs.getDouble("transaction_price"));
+	            t.setVolume(rs.getInt("volume"));
+	            t.setTransactionTime(rs.getTimestamp("transaction_time").toLocalDateTime());
+	            return t;
+	        });
+	}
 }
