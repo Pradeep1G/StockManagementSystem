@@ -37,11 +37,18 @@ public class StocksService {
 
     public boolean updateStockById(long sid, Stocks s) throws Exception {
         logger.info("Updating stock: {}", sid);
-        return stockDAO.updateStock(sid, s);
+        return stockDAO.patchStock(sid, s);
     }
 
     public boolean patchStockById(long sid, Stocks s) throws Exception {
         logger.info("Patching stock: {}", sid);
         return stockDAO.patchStock(sid, s);
+    }
+    
+    public List<String> getMostTransactedStocks() {
+        return stockDAO.getMostTransactedStockNames();
+    }
+    public List<String> getLeastTransactedStocks() {
+        return stockDAO.getLeastTransactedStockNames();
     }
 }
