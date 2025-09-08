@@ -2,26 +2,39 @@
 <div class="oj-hybrid-padding">
   <h1>Customers Details</h1>
   
-  <table border="1">
-        <thead>
-            <tr>
-                <th>customerId</th>
-                <th>firstName</th>
-                <th>lastName</th>
-                <th>phoneNumber</th>
-                <th>emailId</th>
-            </tr>
-        </thead>
-        <tbody data-bind="foreach: customers">
-            <tr>
-                <td><span data-bind="text: customerId"></span></td>
-                <td><span data-bind="text: firstName"></span></td>
-                <td><span data-bind="text: lastName"></span></td>
-                <td><span data-bind="text: phoneNumber"></span></td>
-                <td><span data-bind="text: emailId"></span></td>
+      <oj-table
+    id="customerTable"
+    data="[[customers]]"
+    display="grid"
+    selection-mode.row="single"
+    columns='[
+      {"headerText": "Customer Id", "field": "customerId"},
+      {"headerText": "First Name Type", "field": "firstName"},
+      {"headerText": "Last Name", "field": "lastName"},
+      {"headerText": "Phone Number", "field": "phoneNumber"},
+      {"headerText": "Email Id", "field": "emailId"},
+      {"headerText": "Net Profit", "field": "profit"},
+      {"headerText": "Assets Worth", "field": "assetsWorth"}
+    ]'
+    style="width:100%; margin-top:24px;">
+  </oj-table>
 
-            </tr>
-        </tbody>
-    </table>
+</div>
 
+<div class="oj-hybrid-padding">
+  <h1>Stock Transaction Stats</h1>
+  <div class="oj-flex oj-sm-flex-direction-column oj-md-flex-direction-row" style="gap: 32px;">
+    <div class="oj-panel oj-panel-shadow-sm oj-panel-alt1" style="padding:1rem; min-width:290px;">
+      <h2 class="oj-typography-heading-xs">Most Transacted Stock(s)</h2>
+      <ul data-bind="foreach: mostTransactedStocks">
+        <li data-bind="text: $data"></li>
+      </ul>
+    </div>
+    <div class="oj-panel oj-panel-shadow-sm oj-panel-alt1" style="padding:1rem; min-width:290px;">
+      <h2 class="oj-typography-heading-xs">Least Transacted Stock(s)</h2>
+      <ul data-bind="foreach: leastTransactedStocks">
+        <li data-bind="text: $data"></li>
+      </ul>
+    </div>
+  </div>
 </div>
