@@ -35,6 +35,7 @@ event: { input: validateSellVolume }"
 
 <div class="oj-hybrid-padding">
   <h1>My Stocks</h1>
+  <i><h2>Net Profit - <span data-bind="text: netProfit"></span>&nbsp;Bucks</h2></i>
   <oj-table
     id="stockTable"
     data="[[stockDataSource]]"
@@ -45,6 +46,3 @@ event: { input: validateSellVolume }"
   >
   </oj-table>
 </div>
-<p>Should do net profit</p>
-<p>should create a column - current profit/loss status</p>
-<p>update the net stockk volume in stocks table after every transaction</p>
