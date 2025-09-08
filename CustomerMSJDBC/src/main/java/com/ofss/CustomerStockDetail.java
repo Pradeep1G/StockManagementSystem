@@ -13,6 +13,7 @@ public class CustomerStockDetail {
 		this.netInvested = netInvested;
 		this.currentPrice = currentPrice;
 		this.currentValue = currentValue;
+		this.assetsWorth = assetsWorth;
 	}
 	private int stockId;
     private String stockName;
@@ -20,7 +21,14 @@ public class CustomerStockDetail {
     private Double netInvested;
     private Double currentPrice;  // from stocks table
     private Double currentValue;  // currentVolume * currentPrice
-    // Getters & setters...
+    private double assetsWorth;
+    public double getAssetsWorth() {
+		return assetsWorth;
+	}
+	public void setAssetsWorth(double assetsWorth) {
+		this.assetsWorth = assetsWorth;
+	}
+	// Getters & setters...
 	public int getStockId() {
 		return stockId;
 	}
