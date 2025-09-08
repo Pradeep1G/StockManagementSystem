@@ -25,9 +25,9 @@ public class StocksDAO extends JdbcDaoSupport {
     }
 
     public void addAStock(Stocks s) {
-        String sql = "INSERT INTO stock (STOCK_ID, STOCK_NAME, STOCK_PRICE, STOCK_VOLUME, LISTED_PRICE, LISTED_DATE, LISTED_EXCHANGE) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO stock (STOCK_ID, STOCK_NAME, STOCK_PRICE, STOCK_VOLUME, LISTED_PRICE, LISTED_DATE, LISTED_EXCHANGE) VALUES (?,?,?,?,?,SYSDATE,?)";
         getJdbcTemplate().update(sql, s.getStockId(), s.getStockName(), s.getStockPrice(), s.getStockVolume(),
-                s.getListedPrice(), s.getListedDate(), s.getListedExchange());
+                s.getStockPrice(), s.getListedExchange());
         logger.debug("Stock inserted: {}", s.getStockId());
     }
 
@@ -113,4 +113,25 @@ public class StocksDAO extends JdbcDaoSupport {
         stock.setListedExchange(rs.getString("LISTED_EXCHANGE"));
         return stock;
     };
+    
+    public List<String> getMostTransactedStockNames() {
+        String sql = "SELECT s.stock_name FROM stock s JOIN (" +
+                " SELECT stock_id, COUNT(*) as txn_count FROM transactions GROUP BY stock_id" +
+                ") tx ON s.stock_id = tx.stock_id " +
+                "WHERE tx.txn_count = (" +
+                " SELECT MAX(counts) FROM (SELECT COUNT(*) as counts FROM transactions GROUP BY stock_id)" +
+                ")";
+        return getJdbcTemplate().queryForList(sql, String.class);
+    }
+
+    // Least transacted stock(s)
+    public List<String> getLeastTransactedStockNames() {
+        String sql = "SELECT s.stock_name FROM stock s JOIN (" +
+                " SELECT stock_id, COUNT(*) as txn_count FROM transactions GROUP BY stock_id" +
+                ") tx ON s.stock_id = tx.stock_id " +
+                "WHERE tx.txn_count = (" +
+                " SELECT MIN(counts) FROM (SELECT COUNT(*) as counts FROM transactions GROUP BY stock_id)" +
+                ")";
+        return getJdbcTemplate().queryForList(sql, String.class);
+    }
 }
