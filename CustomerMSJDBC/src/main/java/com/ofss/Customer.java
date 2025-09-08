@@ -8,9 +8,18 @@ public class Customer {
 	private String emailId;
 	private String password;
 	private int stockIds[];
+	private long profit;
 	
+	public long getProfit() {
+		return profit;
+	}
+
+	public void setProfit(long profit) {
+		this.profit = profit;
+	}
+
 	public Customer(int customerId, String firstName, String lastName, long phoneNumber, String emailId,
-			int[] stockIds, String password) {
+			int[] stockIds, String password, long profit) {
 		super();
 		this.customerId = customerId;
 		this.firstName = firstName;
@@ -19,6 +28,7 @@ public class Customer {
 		this.emailId = emailId;
 		this.stockIds = stockIds;
 		this.setPassword(password);
+		this.profit = profit;
 	}
 
 	public Customer() {
