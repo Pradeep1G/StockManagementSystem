@@ -61,6 +61,7 @@ public class CustomerController {
     public ResponseEntity<ApiResponse> loginCustomer(@RequestBody Customer c) {
         ApiResponse response = new ApiResponse();
         try {
+        	System.out.println(c.getEmailId()+" "+c.getPassword());
             boolean valid = customerService.validateLogin(c.getEmailId(), c.getPassword());
             if (valid) {
                 response.setStatus("success");
@@ -92,6 +93,40 @@ public class CustomerController {
             logger.error("Fetch customer stock details error", ex);
             response.setStatus("error");
             response.setMessage("Error fetching stock details: " + ex.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @GetMapping("/transactions/{customerId}")
+    public ResponseEntity<ApiResponse> getAllTransactions(@PathVariable("customerId") int customerId) {
+        ApiResponse response = new ApiResponse();
+        try {
+            List<Transaction> transactions = customerService.getAllTransactions(customerId);
+            response.setStatus("success");
+            response.setMessage("Fetched all transaction details");
+            response.setData(transactions);
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            logger.error("Fetch customer transaction details error", ex);
+            response.setStatus("error");
+            response.setMessage("Error fetching transaction details: " + ex.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @GetMapping("/listWithAssets")
+    public ResponseEntity<ApiResponse> getAllCustomersWithAssetsWorth() {
+        ApiResponse response = new ApiResponse();
+        try {
+            List<CustomerAssetDTO> customers = customerService.getAllCustomersWithAssetsWorth();
+            response.setStatus("success");
+            response.setMessage("Fetched all customer details with assets worth");
+            response.setData(customers);
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            logger.error("Fetch customers error", ex);
+            response.setStatus("error");
+            response.setMessage("Error fetching customer details: " + ex.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
