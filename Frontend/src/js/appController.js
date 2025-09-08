@@ -60,42 +60,87 @@ define([
       {
         path: "about",
         detail: { label: "About", iconClass: "oj-ux-ico-information-s" },
-      }
+      },
     ]);
 
-    this.setNavData = function(userType){
-      if (userType==="Admin") {
-        this.navData(
-        [
+    this.setNavData = function (userType) {
+      if (userType === "Admin") {
+        this.navData([
           { path: "", redirect: "inventory" },
-          { path: "inventory", detail: { label: "Inventory", iconClass: "oj-ux-ico-box-grid" }},
-          { path: "customers", detail: { label: "Customers", iconClass: "oj-ux-ico-contact-group" }},
-          { path: "about", detail: { label: "About", iconClass: "oj-ux-ico-information-s" }}
-        ]
-      )
+          {
+            path: "inventory",
+            detail: { label: "Inventory", iconClass: "oj-ux-ico-box-grid" },
+          },
+          {
+            path: "customers",
+            detail: { label: "Report", iconClass: "oj-ux-ico-contact-group" },
+          },
+          {
+            path: "about",
+            detail: { label: "About", iconClass: "oj-ux-ico-information-s" },
+          },
+        ]);
       } else {
-        this.navData(
-          [
-            { path: "", redirect: "dashboard" },
-            { path: "dashboard", detail: { label: "Dashboard", iconClass: "oj-ux-ico-box-grid" }},
-            { path: "inventory", detail: { label: "Inventory", iconClass: "oj-ux-ico-store" }},
-            { path: "transactions", detail: { label: "Transactions", iconClass: "oj-ux-ico-transfer-money" }},
-            { path: "about", detail: { label: "About", iconClass: "oj-ux-ico-information-s" }},
-          ]
-        )
+        this.navData([
+          { path: "", redirect: "dashboard" },
+          {
+            path: "dashboard",
+            detail: { label: "Dashboard", iconClass: "oj-ux-ico-box-grid" },
+          },
+          {
+            path: "inventory",
+            detail: { label: "Inventory", iconClass: "oj-ux-ico-store" },
+          },
+          {
+            path: "transactions",
+            detail: {
+              label: "Transactions",
+              iconClass: "oj-ux-ico-transfer-money",
+            },
+          },
+          {
+            path: "about",
+            detail: { label: "About", iconClass: "oj-ux-ico-information-s" },
+          },
+        ]);
       }
-    }
+    };
 
     const allRoutes = [
-  { path: "", redirect: "login" },
-  { path: "login", detail: { label: "Login", iconClass: "oj-ux-ico-enter" } },
-  { path: "dashboard", detail: { label: "Dashboard", iconClass: "oj-ux-ico-box-grid" } },
-  { path: "inventory", detail: { label: "Inventory", iconClass: "oj-ux-ico-store" } },
-  { path: "transactions", detail: { label: "Transactions", iconClass: "oj-ux-ico-transfer-money" } },
-  { path: "customers", detail: { label: "Customers", iconClass: "oj-ux-ico-contact-group" } },
-  { path: "about", detail: { label: "About", iconClass: "oj-ux-ico-information-s" } }
-  // ...any other possible routes
-];
+      { path: "", redirect: "login" },
+      {
+        path: "login",
+        detail: { label: "Login", iconClass: "oj-ux-ico-enter" },
+      },
+      {
+        path: "dashboard",
+        detail: { label: "Dashboard", iconClass: "oj-ux-ico-box-grid" },
+      },
+      {
+        path: "inventory",
+        detail: { label: "Inventory", iconClass: "oj-ux-ico-store" },
+      },
+      {
+        path: "transactions",
+        detail: {
+          label: "Transactions",
+          iconClass: "oj-ux-ico-transfer-money",
+        },
+      },
+      {
+        path: "customers",
+        detail: { label: "Report", iconClass: "oj-ux-ico-contact-group" },
+      },
+      {
+        path: "reports",
+        detail: { label: "Report", iconClass: "oj-ux-ico-information-s" },
+      },
+      {
+        path: "about",
+        detail: { label: "About", iconClass: "oj-ux-ico-information-s" },
+      },
+      // ...any other possible routes
+    ];
 
     let router = new CoreRouter(allRoutes, {
       urlAdapter: new UrlPathAdapter(),
@@ -109,9 +154,11 @@ define([
 
     // Setup the navDataProvider with the routes, excluding the first redirected
     // route.
-      this.navDataProvider = ko.pureComputed(() => {
-    return new ArrayDataProvider(this.navData().slice(1), { keyAttributes: "path" });
-  });
+    this.navDataProvider = ko.pureComputed(() => {
+      return new ArrayDataProvider(this.navData().slice(1), {
+        keyAttributes: "path",
+      });
+    });
 
     // Drawer
     self.sideDrawerOn = ko.observable(false);
@@ -140,17 +187,17 @@ define([
     this.handleSignOut = () => {
       localStorage.clear(); // or removeItem() for specific keys only
       this.navData([
-      { path: "", redirect: "login" },
-      {
-        path: "login",
-        detail: { label: "Login", iconClass: "oj-ux-ico-enter" },
-      },
-      {
-        path: "about",
-        detail: { label: "About", iconClass: "oj-ux-ico-information-s" },
-      }
-    ]);
-    this.userLogin('');
+        { path: "", redirect: "login" },
+        {
+          path: "login",
+          detail: { label: "Login", iconClass: "oj-ux-ico-enter" },
+        },
+        {
+          path: "about",
+          detail: { label: "About", iconClass: "oj-ux-ico-information-s" },
+        },
+      ]);
+      this.userLogin("");
       this.router.go({ path: "login" }); // clean SPA navigation
     };
     this.menuActionListener = (event) => {
