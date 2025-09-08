@@ -143,4 +143,24 @@ public class StockController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @GetMapping("/mostTransacted")
+    public ResponseEntity<ApiResponse> getMostTransactedStocks() {
+        ApiResponse response = new ApiResponse();
+        List<String> names = stocksService.getMostTransactedStocks();
+        response.setStatus("success");
+        response.setData(names);
+        response.setMessage("Most transacted stocks found");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/leastTransacted")
+    public ResponseEntity<ApiResponse> getLeastTransactedStocks() {
+        ApiResponse response = new ApiResponse();
+        List<String> names = stocksService.getLeastTransactedStocks();
+        response.setStatus("success");
+        response.setData(names);
+        response.setMessage("Least transacted stocks found");
+        return ResponseEntity.ok(response);
+    }
 }
